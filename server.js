@@ -1,12 +1,15 @@
 /**
- * 视频无水印下载 - Node.js 零依赖服务器
- * 使用 Node.js 内置模块: http, fs, path, url
- * Node.js 22+ 内置 fetch API
+ * 视频无水印下载 - Node.js 服务器（ES Module 版）
+ * 用于本地开发，生产环境使用 Cloudflare Pages Functions
  */
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
-const { parseVideoUrl } = require('./lib/platforms');
+import http from 'http';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { parseVideoUrl } from './lib/platforms.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
 
@@ -31,7 +34,6 @@ const MIME_TYPES = {
  */
 function serveStatic(req, res) {
   let filePath = req.url === '/' ? '/index.html' : req.url;
-  // 安全检查：防止目录遍历
   filePath = path.normalize(filePath).replace(/^(\.\.(\/|\\|$))+/, '');
   const fullPath = path.join(__dirname, 'public', filePath);
 
@@ -51,9 +53,7 @@ function serveStatic(req, res) {
       res.end(content);
       return true;
     }
-  } catch (e) {
-    // 文件读取失败
-  }
+  } catch (e) {}
 
   return false;
 }
@@ -93,7 +93,6 @@ function sendJSON(res, status, data) {
  * 主服务器
  */
 const server = http.createServer(async (req, res) => {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -119,7 +118,7 @@ const server = http.createServer(async (req, res) => {
       console.log(`\n📥 解析请求: ${url.substring(0, 80)}...`);
       const result = await parseVideoUrl(url.trim());
       console.log(`✅ 解析成功: ${result.platformName} - ${result.title}`);
-      
+
       sendJSON(res, 200, { success: true, data: result });
     } catch (error) {
       console.error('❌ 解析失败:', error.message);
@@ -142,7 +141,6 @@ const server = http.createServer(async (req, res) => {
     console.log(`📥 代理下载: ${decodedUrl.substring(0, 80)}...`);
 
     try {
-      // 根据域名动态设置 Referer（防盗链需要正确的 referer）
       let referer = 'https://www.douyin.com/';
       if (decodedUrl.includes('xiaohongshu') || decodedUrl.includes('xhscdn')) {
         referer = 'https://www.xiaohongshu.com/';
@@ -182,7 +180,6 @@ const server = http.createServer(async (req, res) => {
 
       res.writeHead(200, headers);
 
-      // Stream response body
       const reader = response.body.getReader();
       try {
         while (true) {
@@ -195,7 +192,7 @@ const server = http.createServer(async (req, res) => {
       } finally {
         reader.releaseLock();
       }
-      
+
       res.end();
       console.log(`✅ 下载完成: ${filename}`);
     } catch (error) {
@@ -207,7 +204,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // ==================== API: 代理图片（解决防盗链） ====================
+  // ==================== API: 代理图片 ====================
   if (req.method === 'GET' && pathname === '/api/proxy-img') {
     const imgUrl = urlObj.searchParams.get('url');
     if (!imgUrl) {
@@ -216,10 +213,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     const decodedUrl = decodeURIComponent(imgUrl);
-    console.log(`🖼 代理图片: ${decodedUrl.substring(0, 80)}...`);
 
     try {
-      // 根据域名判断 referer
       let referer = 'https://www.douyin.com/';
       if (decodedUrl.includes('hdslb.com')) {
         referer = 'https://www.bilibili.com/';
@@ -304,7 +299,7 @@ server.listen(PORT, () => {
   console.log('  ║   🎬  视频无水印下载服务             ║');
   console.log('  ║                                     ║');
   console.log(`  ║   地址: http://localhost:${PORT}         ║`);
-  console.log('  ║   Node.js 内置模块 · 零依赖         ║');
+  console.log('  ║   Node.js ES Module · 零依赖        ║');
   console.log('  ║   Built with WorkBuddy              ║');
   console.log('  ╚══════════════════════════════════════╝');
   console.log('');

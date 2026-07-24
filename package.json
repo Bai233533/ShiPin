@@ -1,11 +1,12 @@
 {
   "name": "video-downloader",
-  "version": "1.0.0",
-  "description": "多平台视频无水印下载工具 - 支持抖音、快手、B站、小红书、YouTube等",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "多平台视频无水印下载工具 - 支持 Cloudflare Pages 部署",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "deploy": "wrangler pages deploy public"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -29,3 +29,6 @@ weibo_cookies.txt
 
 # 系统文件
 $RECYCLE.BIN/
+
+# Cloudflare Wrangler 本地状态
+.wrangler/

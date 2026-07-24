@@ -1,0 +1,27 @@
+[Unit]
+Description=ShiPin - 视频无水印下载服务
+Documentation=https://github.com/Bai233533/ShiPin
+After=network.target
+
+[Service]
+Type=simple
+# 项目目录（按实际部署路径修改）
+WorkingDirectory=/root/ShiPin
+# 启动命令
+ExecStart=/usr/bin/node server.js
+# 环境变量
+Environment=PORT=3000
+Environment=NODE_ENV=production
+# 自动重启策略
+Restart=always
+RestartSec=10
+# 日志输出
+StandardOutput=append:/var/log/shipin.log
+StandardError=append:/var/log/shipin.log
+# 用户和组（建议使用非 root 用户）
+User=root
+# 资源限制
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

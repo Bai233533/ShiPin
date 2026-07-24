@@ -31,6 +31,28 @@ open http://localhost:3000
 
 - Node.js ≥ 22.0.0（依赖内置 `fetch` API）
 
+## 🌐 部署到服务器
+
+详细部署文档见 [DEPLOY.md](./DEPLOY.md)
+
+### 一键部署到 Linux 服务器
+
+```bash
+# 安装 Node.js 22
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs git
+
+# 克隆并启动
+git clone https://github.com/Bai233533/ShiPin.git
+cd ShiPin
+node server.js
+```
+
+### 推荐方案
+
+- **腾讯云轻量应用服务器**（2核2G 4M，24 元/月）：国内访问最快
+- 详见 [DEPLOY.md](./DEPLOY.md) 的 systemd 守护进程配置（24/7 运行）
+
 ## 📦 项目结构
 
 ```

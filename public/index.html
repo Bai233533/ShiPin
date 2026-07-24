@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="多平台视频无水印下载工具，支持抖音、快手、B站、小红书">
+  <title>视频无水印下载 - 多平台视频解析</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Hero Section -->
+    <header class="hero">
+      <div class="hero-icon">🎬</div>
+      <h1>视频无水印下载</h1>
+      <p class="hero-subtitle">粘贴链接，一键解析 · 下载无水印原视频</p>
+    </header>
+
+    <!-- Input Section -->
+    <section class="input-section" id="input-section">
+      <div class="input-card">
+        <div class="input-wrapper">
+          <textarea
+            id="url-input"
+            class="url-input"
+            placeholder="在此粘贴视频链接或分享文本...
+
+例如：「6.94 复制打开抖音，看看【XX的作品】... https://v.douyin.com/xxxxx/」
+
+支持平台：抖音 · 快手 · B站 · 小红书"
+            rows="3"
+            autofocus
+          ></textarea>
+          <div class="input-actions">
+            <button class="btn-paste" id="btn-paste" title="从剪贴板粘贴">
+              <span class="btn-icon">📋</span> 粘贴
+            </button>
+            <button class="btn-parse" id="btn-parse">
+              <span class="btn-icon">🔍</span> 解析视频
+            </button>
+          </div>
+          <button class="btn-clear" id="btn-clear" title="清空">✕</button>
+        </div>
+      </div>
+
+      <!-- Platform Badges -->
+      <div class="platform-badges">
+        <span class="badge badge-douyin">🎵 抖音</span>
+        <span class="badge badge-kuaishou">⚡ 快手</span>
+        <span class="badge badge-bilibili">📺 B站</span>
+        <span class="badge badge-xiaohongshu">📕 小红书</span>
+      </div>
+    </section>
+
+    <!-- Loading State -->
+    <section class="loading-section hidden" id="loading-section">
+      <div class="spinner"></div>
+      <p id="loading-text">正在解析视频链接...</p>
+    </section>
+
+    <!-- Error State -->
+    <section class="error-section hidden" id="error-section">
+      <div class="error-card">
+        <div class="error-icon">😕</div>
+        <h3 id="error-title">解析失败</h3>
+        <p id="error-message">请检查链接是否正确，或稍后重试</p>
+        <button class="btn-retry" id="btn-retry">重新输入</button>
+      </div>
+    </section>
+
+    <!-- Result Section -->
+    <section class="result-section hidden" id="result-section">
+      <div class="result-card">
+        <!-- Close button -->
+        <button class="btn-result-close" id="btn-result-close" title="关闭">✕</button>
+
+        <!-- Video thumbnail -->
+        <div class="video-thumbnail-wrapper">
+          <img id="video-thumbnail" class="video-thumbnail" src="" alt="视频缩略图" />
+          <div class="duration-badge" id="duration-badge"></div>
+          <span class="platform-tag" id="platform-tag"></span>
+        </div>
+
+        <!-- Video info -->
+        <div class="video-info">
+          <h2 class="video-title" id="video-title"></h2>
+
+          <div class="author-row">
+            <img id="author-avatar" class="author-avatar" src="" alt="" />
+            <span class="author-name" id="author-name"></span>
+            <span class="author-uid" id="author-uid"></span>
+          </div>
+
+          <div class="video-meta">
+            <span class="meta-item" id="meta-platform"></span>
+            <span class="meta-item" id="meta-duration"></span>
+            <span class="meta-item" id="meta-quality"></span>
+          </div>
+
+          <!-- Download button -->
+          <button class="btn-download" id="btn-download">
+            <span class="btn-icon">⬇</span> 下载无水印视频
+          </button>
+
+          <!-- Download progress -->
+          <div class="download-progress hidden" id="download-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="progress-text" id="progress-text">准备下载...</p>
+          </div>
+
+          <!-- Additional info -->
+          <div class="stats-row hidden" id="stats-row">
+            <span class="stat-item" id="stat-like">❤ 0</span>
+            <span class="stat-item" id="stat-comment">💬 0</span>
+            <span class="stat-item" id="stat-share">🔄 0</span>
+          </div>
+
+          <!-- Music info for Douyin -->
+          <div class="music-info hidden" id="music-info">
+            <span class="music-icon">🎵</span>
+            <span class="music-title" id="music-title"></span>
+            <button class="btn-download-audio" id="btn-download-audio">下载音乐</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+      <div class="feature-item">
+        <div class="feature-icon">🚫</div>
+        <h4>无水印</h4>
+        <p>自动去除平台水印，保存原视频</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <h4>极速解析</h4>
+        <p>智能识别链接，秒级获取视频信息</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📱</div>
+        <h4>多平台支持</h4>
+        <p>覆盖主流短视频和视频平台</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔒</div>
+        <h4>隐私安全</h4>
+        <p>本地运行，数据不会上传第三方</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-disclaimer">
+        ⚠️ 免责声明：本工具仅供个人学习研究使用。下载的视频版权归原作者所有，请尊重知识产权，勿用于商业用途或二次传播。使用本工具即表示您同意遵守各平台的服务条款。
+      </div>
+      <div class="footer-credit">Built with ❤️ · Powered by WorkBuddy</div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
